@@ -1,18 +1,25 @@
-const express= require('express');
-const connect = require('./src/config/database');
-const User = require('./src/models/userModel');
-const saveUser = require('./src/controllers/userController');
+const express= require("express");
+const connect = require("./src/config/database")
 const app= express();
+const User = require("./src/models/userModel")
+const bodyParser = require('body-parser');
+const apiRouter =require("./src/routes/route")
+const passport= require('passport');
+const authRouter= require('./src/routes/authRoutes')
+require('./src/utility/auth')
 
-app.get('/', (req, res)=> {
-    res.status(200).send("Hello world.")
-})
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 
-app.listen(3000, ()=> {
-    console.log("Server has started successfully!")
+app.use('/', authRouter)
+app.use('/api', passport.authenticate('jwt',{session: false}),apiRouter )
 
-    connect()
-    console.log("Database has started successfully!")
-    saveUser()
+app.listen(3000, async()=> {
+    
+    await connect()
+    console.log("Mongodb started successfully")
+    console.log('Server has started successfully!')
 
+    // console.log(user);
+    
 })

@@ -1,10 +1,6 @@
-const mongoose= require('mongoose');
+const mongoose = require("mongoose");
 const bcrypt= require('bcrypt')
-
-// In mongoDB we first need to define the schema/table structure as given below and then
-// we make a model out of it....
-
-const defineUser = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     email: {
         type: String,
         require: true,
@@ -13,25 +9,31 @@ const defineUser = new mongoose.Schema({
     password: {
         type: String,
         require: true
-    },
-    username: {
-        type: String,
-        required: true
     }
-}, {timestamps: true})
+}, {timestamps: true});
+
 
 //pre save is a trigger that gets a function and execute it before user object is save.
-defineUser.pre('save', async function encryptPassword(next) {   //this pre fucntion calls the next function before
+// and since its a pre camputaional function, we must define it before the User = mongoose.model('User, userSchema)
+
+userSchema.pre('save', async function encryptPassword(next) {   //this pre fucntion calls the next function before
     const user = this;                                          // the flow reach and initiate the user schema/model
-    const hash = await bcrypt.hash(this.password, 10);
+    const hash = await bcrypt.hash(user.password, 10);
     this.password =hash;
     next();
-})
+    console.log("Hi I'm from userModel.js - pre-save!!")
 
-defineUser.method.isValidPassword = async (password) => {
+    console.log(hash)
+});
+
+userSchema.methods.isValidPassword = async function checkValidity(password) {
     const user= this;
+    console.log("Hi I'm from userModel.js - login")
+
     const compare= await bcrypt.compare(password, user.password)
     return compare
-}
+};
 
-module.exports= defineUser;
+const User = mongoose.model("User", userSchema);
+
+module.exports= User
