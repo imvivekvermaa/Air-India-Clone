@@ -1,6 +1,6 @@
 const mongoose= require('mongoose');
 
-const bookingSchema= new mongoose.Schema('Booking', {
+const bookingSchema= new mongoose.Schema({
     id:{
         type: Number,
         required: true,
@@ -18,13 +18,13 @@ const bookingSchema= new mongoose.Schema('Booking', {
     },
     status: {
         type: String,
-        requred: true,
+        required: true,
         default: 'In process',
         enum: ["booked","cancelled","in process"]
     }
 }, {timestamps: true});
 
-const BookingModel = new mongoose.Model('Booking', bookingSchema)
+const BookingModel = new mongoose.model('Booking', bookingSchema)
 
 module.exports= {
     BookingModel

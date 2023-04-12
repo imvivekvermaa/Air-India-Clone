@@ -18,15 +18,11 @@ const flightSchema = new mongoose.Schema({
         required: true,
         ref: 'Airline' 
     },
-    flightDate: {
-        type: Date,
-        default: true
-    },
     departureTime: {
-        type: Timestamp
+        type: String
     },
     arrivalTIme: {
-        type: Timestamp
+        type: String
     },
     flightNumber: {
         type: String,
@@ -41,7 +37,7 @@ const flightSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
-const flightModel= new mongoose('Flight', flightSchema);
+const flightModel= new mongoose.model('Flight', flightSchema);
 
 module.exports= {
     flightModel

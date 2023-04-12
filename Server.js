@@ -5,7 +5,7 @@ const User = require("./src/models/userModel")
 const bodyParser = require('body-parser');
 const apiRouter =require("./src/routes/route")
 const passport= require('passport');
-const authRouter= require('./src/routes/authRoutes')
+const authRouter= require('./src/routes/authRouter')
 require('./src/utility/auth')
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -14,7 +14,14 @@ app.use(bodyParser.json())
 app.use('/', authRouter)
 app.use('/api', passport.authenticate('jwt',{session: false}),apiRouter )
 
-app.listen(3000, async()=> {
+// app.use(function(err, req, res, next){
+//     res.status(err.status || 500);
+//     res.json({
+//         success: false,
+//         error: err
+//     })
+// })
+app.listen(5000, async()=> {
     
     await connect()
     console.log("Mongodb started successfully")
